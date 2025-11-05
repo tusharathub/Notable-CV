@@ -1,0 +1,15 @@
+import { ConvexProvider, ConvexReactClient } from "convex/react";
+import { ReactNode } from "react";
+
+
+if(!process.env.NEXT_PUBLIC_CONVEX_URL) {
+    throw new Error("Missing NEXT_PUBLIC_CONVEX_URL in you .env file");
+}
+
+const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL);
+
+export default function ConvexClientProvider({children} : {children: ReactNode}) {
+    return (
+        <ConvexProvider client={convex}> {children} </ConvexProvider>
+    )
+}
