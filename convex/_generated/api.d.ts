@@ -9,6 +9,7 @@
  */
 
 import type * as usage from "../usage.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -26,6 +27,7 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   usage: typeof usage;
+  users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 
