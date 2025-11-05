@@ -2,7 +2,10 @@
 
 import React, { useState } from "react";
 import { Upload, FileText, Sparkles } from "lucide-react";
-import { UserButton } from "@clerk/nextjs";
+import { useAuth, UserButton } from "@clerk/nextjs";
+import { format } from "date-fns";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function DashboardPage() {
   const [resume, setResume] = useState<File | null>(null);
@@ -13,6 +16,13 @@ export default function DashboardPage() {
     suggestions: string[];
     keyPoints : string[];
   } | null>(null);
+
+  const {userId} = useAuth();
+  const today = format(new Date(), "yyyy-MM-dd")
+  const usageCount = useQuery(api.usage.getUsage, { userId: userId || "", date: today });
+  const incrementUsage = useMutation(api.usage.incrementUsage);
+
+  const canGenerate = usageCount === undefined ? true : usageCount < 5;
 
   const handleResumeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -33,7 +43,7 @@ export default function DashboardPage() {
     try {
         const res = await fetch("/api/generate", {
             method: "POST",
-            headers: {"content-type": "applicaiton/json"},
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 jobDescription : jobDesc,
                 resume: text,
@@ -47,6 +57,10 @@ export default function DashboardPage() {
 
         const responseText = data.result as string;
 
+        if(userId) {
+          await incrementUsage({userId: userId!, date: today});
+        }
+
         // Extract sections based on the "---" format from your API route
       const coverLetterMatch = responseText.match(/\*\*Cover Letter:\*\*([\s\S]*?)\*\*Key Fit Points:\*\*/);
       const keyPointsMatch = responseText.match(/\*\*Key Fit Points:\*\*([\s\S]*?)\*\*Resume Improvement Suggestions:\*\*/);
@@ -57,6 +71,7 @@ export default function DashboardPage() {
       const suggestions = suggestionsMatch? suggestionsMatch[1].trim().split("\n").filter((line) => line.trim().startsWith("-")): [];
 
       setResult({coverLetter, keyPoints, suggestions});
+
     } catch (error: any) {
         console.log("error in generatin CV", error);
         alert(error.message || "Failed in generating CV")
@@ -72,7 +87,7 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
           <Sparkles className="text-green-600" /> AI Cover Letter Builder
         </h1>
-        <UserButton afterSignOutUrl="/" />
+        {/* <UserButton afterSignOutUrl="/" /> */}
         </div>
 
         <div className="bg-white border rounded-2xl shadow-sm p-6 mb-8">
@@ -106,11 +121,16 @@ export default function DashboardPage() {
 
             <button
               onClick={handleGenerate}
-              disabled={loading}
+              disabled={loading || !canGenerate}
               className="px-6 py-3 bg-green-800 text-white rounded-xl hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Generating..." : "Generate Cover Letter"}
+              {loading ? "Generating..." : !canGenerate ? "Daily limit reached" : "Generate Custom Cover Letter"}
             </button>
+            {usageCount !== undefined && (
+              <p className="text-sm text-gray-800 mt-2">
+                {usageCount} out of 5 free CV generations have been used
+              </p>
+            )}
           </div>
         </div>
 
@@ -119,7 +139,7 @@ export default function DashboardPage() {
           <div className="space-y-8">
             <div className="bg-white border rounded-2xl shadow-sm p-6">
               <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                <FileText className="text-green-800" /> Generated Cover Letter
+                <FileText className="text-green-800" /> Your Generated Cover Letter
               </h2>
               <pre className="whitespace-pre-wrap text-gray-700">
                 {result.coverLetter}
@@ -133,7 +153,7 @@ export default function DashboardPage() {
             </div>
 
             <div className="bg-white border rounded-2xl shadow-sm p-6">
-              <h3 className="text-xl font-semibold mb-3 text-green-700">
+              <h3 className="text-xl font-semibold mb-3 text-green-800">
                 Key Fit Points that you should consider
               </h3>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
@@ -146,7 +166,7 @@ export default function DashboardPage() {
             </div>
 
             <div className="border rounded-2xl shadow-sm p-6">
-                <h3 className="text-xl font-semibold mb-3 text-green-700"> 
+                <h3 className="text-xl font-semibold mb-3 text-green-800"> 
                     Resume Improvement Suggestions
                 </h3>
                 <ul className="list-disc list-inside text-gray-800 space-y-2">
