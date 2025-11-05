@@ -9,7 +9,8 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{
     coverLetter: string;
-    matched: string[];
+    suggestions: string[];
+    keyPoints : string[];
   } | null>(null);
 
   const handleResumeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,9 +23,45 @@ export default function DashboardPage() {
       alert("Please upload your resume and paste the job description.");
       return;
     }
+
+    const text = await resume.text();
+
     setLoading(true);
     setResult(null);
-    setLoading(false);
+
+    try {
+        const res = await fetch("/api/generate", {
+            method: "POST",
+            headers: {"content-type": "applicaiton/json"},
+            body: JSON.stringify({
+                jobDescription : jobDesc,
+                resume: text,
+            })
+        })
+
+        const data = await res.json();
+        if(!res.ok) {
+            throw new Error(data.error || "Something went terrible wrong");
+        }
+
+        const responseText = data.result as string;
+
+        // Extract sections based on the "---" format from your API route
+      const coverLetterMatch = responseText.match(/\*\*Cover Letter:\*\*([\s\S]*?)\*\*Key Fit Points:\*\*/);
+      const keyPointsMatch = responseText.match(/\*\*Key Fit Points:\*\*([\s\S]*?)\*\*Resume Improvement Suggestions:\*\*/);
+      const suggestionsMatch = responseText.match(/\*\*Resume Improvement Suggestions:\*\*([\s\S]*)/);
+
+      const coverLetter = coverLetterMatch?.[1]?.trim() || "No cover letter found.";
+      const keyPoints = keyPointsMatch? keyPointsMatch[1].trim().split("\n").filter((line) => line.trim().startsWith("-")): [];
+      const suggestions = suggestionsMatch? suggestionsMatch[1].trim().split("\n").filter((line) => line.trim().startsWith("-")): [];
+
+      setResult({coverLetter, keyPoints, suggestions});
+    } catch (error: any) {
+        console.log("error in generatin CV", error);
+        alert(error.message || "Failed in generating CV")
+    }finally{
+        setLoading(false);
+    }
   };
 
   return (
@@ -43,7 +80,7 @@ export default function DashboardPage() {
                 <span>{resume ? resume.name : "Click to upload (.pdf or .docx)"}</span>
                 <input
                   type="file"
-                  accept=".pdf,.docx"
+                  accept=".pdf,.docx,.txt"
                   className="hidden"
                   onChange={handleResumeUpload}
                 />
@@ -93,13 +130,28 @@ export default function DashboardPage() {
 
             <div className="bg-white border rounded-2xl shadow-sm p-6">
               <h3 className="text-xl font-semibold mb-3 text-green-700">
-                Matched Bullet Points
+                Key Fit Points that you should consider
               </h3>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
-                {result.matched.map((point, i) => (
-                  <li key={i}>{point}</li>
-                ))}
+                {result.keyPoints.length > 0 ? (
+                    result.keyPoints.map((point, i) => <li key={i}> {point} </li>)
+                ) : (
+                    <li>No points are relatable</li>
+                )}
               </ul>
+            </div>
+
+            <div className="border rounded-2xl shadow-sm p-6">
+                <h3 className="text-xl font-semibold mb-3 text-green-700"> 
+                    Resume Improvement Suggestions
+                </h3>
+                <ul className="list-disc list-inside text-gray-800 space-y-2">
+                    {result.suggestions.length > 0 ? (
+                        result.suggestions.map((point, i) => <li key={i}> {point} </li> )
+                    ) : (
+                        <li>No suggestions found</li>
+                    ) }
+                </ul>
             </div>
 
           </div>
