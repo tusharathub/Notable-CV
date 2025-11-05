@@ -22,7 +22,7 @@ export default function DashboardPage() {
   const usageCount = useQuery(api.usage.getUsage, { userId: userId || "", date: today });
   const incrementUsage = useMutation(api.usage.incrementUsage);
 
-  const canGenerate = usageCount === undefined ? true : usageCount < 5;
+  const canGenerate = usageCount === undefined ? true : usageCount < 10;
 
   const handleResumeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

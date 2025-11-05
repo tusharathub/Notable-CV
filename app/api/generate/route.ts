@@ -16,6 +16,7 @@ export async function POST(req: Request) {
     const prompt = `
         You are a professional career assistant. 
         The user has provided a job description and their resume. 
+        Call user with "you", do not make them feel that this is AI generated
 
         1. Write a personalized cover letter tailored to the job. 
         2. Give 3-5 strong bullet points summarizing why the user fits the role. 
