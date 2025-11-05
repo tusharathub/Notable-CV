@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Upload, FileText, Sparkles } from "lucide-react";
+import { UserButton } from "@clerk/nextjs";
 
 export default function DashboardPage() {
   const [resume, setResume] = useState<File | null>(null);
@@ -66,10 +67,13 @@ export default function DashboardPage() {
 
   return (
     <main className="min-h-screen p-6">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto ">
+        <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
           <Sparkles className="text-green-600" /> AI Cover Letter Builder
         </h1>
+        <UserButton afterSignOutUrl="/" />
+        </div>
 
         <div className="bg-white border rounded-2xl shadow-sm p-6 mb-8">
           <div className="flex flex-col gap-4">

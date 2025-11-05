@@ -14,7 +14,7 @@ export default function Home() {
         </p>
         <div className="flex gap-4">
           <Link
-            href="/sign-in"
+            href="/dashboard"
             className="px-6 py-3 border border-gray-300 rounded-xl hover:bg-gray-100 transition font-medium"
           >
             Get started for free
@@ -72,13 +72,13 @@ export default function Home() {
               <p className="text-4xl font-bold mb-6">$0</p>
               <Link
                 href="/sign-in"
-                className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
+                className="px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition"
               >
                 Get Started Free
               </Link>
             </div>
 
-            <div className="p-8 border-2 border-blue-600 rounded-2xl shadow-md">
+            <div className="p-8 border-2 border-green-600 rounded-2xl shadow-md">
               <h3 className="text-2xl font-semibold mb-4">Premium</h3>
               <p className="text-gray-600 mb-6">
                 Unlimited cover letters, resume optimization, and saved history.
@@ -88,7 +88,7 @@ export default function Home() {
               </p>
               <Link
                 href="/upgrade"
-                className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
+                className="px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition"
               >
                 Upgrade Now
               </Link>
