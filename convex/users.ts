@@ -30,3 +30,17 @@ export const syncUser = mutation({
     });
   },
 });
+
+export const updatePremiumStatus = mutation({
+    args: {userId : v.string(), isPremium: v.boolean()},
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+        .query("users")
+        .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+        .unique();
+
+        if(user) {
+            await ctx.db.patch(user._id, {isPremium: args.isPremium});
+        }
+    }
+})
