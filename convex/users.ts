@@ -1,21 +1,32 @@
-import { v } from "convex/values";
 import { mutation } from "./_generated/server";
+import { v } from "convex/values";
 
-export const createUser = mutation({
-    args: {userId : v.string(), email: v.string()},
-    handler : async (ctx, args) => {
-        const existing = await ctx.db
-        .query("users")
-        .withIndex("by_userId", (q) => q.eq("userId", args.userId))
-        .unique();
+export const syncUser = mutation({
+  args: {
+    userId: v.string(),
+    email: v.string(),
+    isPremium: v.optional(v.boolean()),
+  },
+  handler: async (ctx, { userId, email, isPremium }) => {
+    const existingUser = await ctx.db
+      .query("users")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .first();
 
-        if(!existing){
-            await ctx.db.insert("users", {
-                userId: args.userId,
-                email: args.email,
-                isPremium: false,
-                createdAt: Date.now(),
-            })
-        }
+    if (existingUser) {
+      await ctx.db.patch(existingUser._id, {
+        email,
+        isPremium: isPremium ?? existingUser.isPremium,
+      });
+      return existingUser._id;
     }
-})
+
+    // Create new user
+    return await ctx.db.insert("users", {
+      userId,
+      email: email ,
+      isPremium: isPremium ?? false,
+      createdAt: Date.now(),
+    });
+  },
+});
