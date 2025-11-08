@@ -13,7 +13,7 @@ export async function POST(req: Request) {
         }
 
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ["card", "paypal"],
+            payment_method_types: ["card"],
             mode: "subscription",
             line_items: [
                 {

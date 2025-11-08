@@ -11,6 +11,8 @@
   "dependencies": {
     "@clerk/clerk-react": "^5.53.6",
     "@clerk/nextjs": "^6.34.3",
+    "@stripe/stripe-js": "^8.3.0",
+    "axios": "^1.13.2",
     "convex": "^1.28.2",
     "date-fns": "^4.1.0",
     "groq-sdk": "^0.34.0",
