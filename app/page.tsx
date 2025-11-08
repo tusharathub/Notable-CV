@@ -84,7 +84,7 @@ export default function Home() {
                 Unlimited cover letters, resume optimization, and saved history.
               </p>
               <p className="text-4xl font-bold mb-6">
-                $0.00<span className="text-lg">/month</span>
+                $4.49<span className="text-lg">/month</span>
               </p>
               <Link
                 href="/upgrade"

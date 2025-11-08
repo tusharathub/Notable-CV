@@ -20,7 +20,7 @@ export async function POST(req: Request) {
                     price_data: {
                         currency: "usd",
                         product_data : {name: "AI CV Builder Premium Plan"},
-                        unit_amount: 499,
+                        unit_amount: 449,
                         recurring: {interval: "month"},
                     },
                     quantity: 1,
