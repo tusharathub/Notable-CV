@@ -49,17 +49,14 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-10">
             {[
               {
-                icon: "✨",
                 title: "AI-Powered Cover Letters",
                 desc: "Paste any job description and get a tailor-made letter written specifically for that role.",
               },
               {
-                icon: "📑",
                 title: "Smart Resume Insights",
                 desc: "Get instant tips on improving your resume for better job compatibility and ATS performance.",
               },
               {
-                icon: "⚡",
                 title: "Instant, Personalized & Polished",
                 desc: "No templates, no fluff — just powerful AI that adapts to your tone, voice, and experience.",
               },
@@ -68,7 +65,6 @@ export default function Home() {
                 key={f.title}
                 className="p-8 border rounded-2xl shadow-sm hover:shadow-md transition bg-gray-50 hover:bg-white"
               >
-                <div className="text-4xl mb-4">{f.icon}</div>
                 <h3 className="text-xl font-semibold mb-3">{f.title}</h3>
                 <p className="text-gray-600">{f.desc}</p>
               </div>

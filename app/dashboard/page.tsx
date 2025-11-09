@@ -286,7 +286,7 @@ export default function DashboardPage() {
 
         {/* Premium CTA */}
         {!isPremium && (
-          <div className="mt-10 text-center bg-gradient-to-r from-green-100 via-green-200 to-green-300 text-gray-800 rounded-2xl py-8 shadow-md">
+          <div className="mt-10 text-center bg-gradient-to-r from-green-50 via-green-100 to-green-200 text-gray-800 rounded-2xl py-8 shadow-md">
             <h3 className="text-2xl font-bold mb-2">Unlock Unlimited Access!!!</h3>
             <p className="text-sm mb-4 opacity-90">
               Upgrade to Premium for unlimited cover letters and faster processing.
