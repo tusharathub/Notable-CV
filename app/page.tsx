@@ -1,20 +1,35 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle, Sparkles } from "lucide-react";
+import Particles from "../components/Particles";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-gray-100 to-white text-gray-900">
-      {/* HERO SECTION */}
-      <section className="flex flex-col items-center justify-center text-center py-28 px-4 relative overflow-hidden">
-        <div className="max-w-4xl mx-auto">
+      
+      {/* HERO SECTION WITH PARTICLES */}
+      <section className="relative flex flex-col items-center justify-center text-center h-screen px-4 overflow-hidden">
+        {/* PARTICLES BACKGROUND */}
+        <div className="absolute inset-0 z-0">
+          <Particles
+            particleColors={["#000000", "#000000"]}
+            particleCount={400}
+            particleSpread={10}
+            speed={0.1}
+            particleBaseSize={100}
+            moveParticlesOnHover={true}
+            alphaParticles={false}
+            disableRotation={false} className={undefined}          />
+        </div>
+
+        {/* HERO CONTENT */}
+        <div className="relative z-10 max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
             Land Your Dream Job with{" "}
             <span className="text-green-700">AI-Crafted Cover Letters</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
             Transform your resume into tailored cover letters instantly.
-            Powered by AI that understands your experience, goals, and tone —
-            not just templates.
+            Powered by AI that understands your experience, goals, and tone — not just templates.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
@@ -33,7 +48,7 @@ export default function Home() {
         </div>
 
         {/* Floating sparkles */}
-        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 text-green-300 animate-pulse">
+        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 text-green-300 animate-pulse z-10">
           <Sparkles className="w-12 h-12 opacity-70" />
         </div>
       </section>
@@ -103,9 +118,7 @@ export default function Home() {
                 className="p-8 bg-white border rounded-2xl shadow-sm hover:shadow-md transition"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="text-green-700 font-bold text-2xl">
-                    {s.step}.
-                  </div>
+                  <div className="text-green-700 font-bold text-2xl">{s.step}.</div>
                   <h3 className="text-xl font-semibold">{s.title}</h3>
                 </div>
                 <p className="text-gray-600">{s.desc}</p>
@@ -124,8 +137,7 @@ export default function Home() {
             <div className="p-8 border rounded-2xl shadow-sm hover:shadow-md transition">
               <h3 className="text-2xl font-semibold mb-4">Free Plan</h3>
               <p className="text-gray-600 mb-6">
-                Generate up to 3 AI cover letters per day — perfect to test the
-                magic.
+                Generate up to 3 AI cover letters per day — perfect to test the magic.
               </p>
               <p className="text-5xl font-bold mb-6">$0</p>
               <Link
@@ -139,8 +151,7 @@ export default function Home() {
             <div className="p-8 border-2 border-green-700 rounded-2xl shadow-md bg-green-50">
               <h3 className="text-2xl font-semibold mb-4">Premium</h3>
               <p className="text-gray-700 mb-6">
-                Unlimited letters, smart resume tips, and access to your last 20
-                CVs.
+                Unlimited letters, smart resume tips, and access to your last 20 CVs.
               </p>
               <p className="text-5xl font-bold mb-6">
                 $4.49 <span className="text-lg text-gray-600">/month</span>
@@ -173,7 +184,13 @@ export default function Home() {
       {/* FOOTER */}
       <footer className="py-10 text-center text-gray-500 text-sm border-t mt-10">
         <p>© {new Date().getFullYear()} CoverCraft AI. All rights reserved.</p>
-        <a href="https://x.com/tushar_nerd" target="_blank" rel="noopener noreferrer">Queries?</a>
+        <a
+          href="https://x.com/tushar_nerd"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Queries?
+        </a>
       </footer>
     </main>
   );
