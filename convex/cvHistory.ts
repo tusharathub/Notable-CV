@@ -32,13 +32,15 @@ export const getCVHistory = query({
         .withIndex("by_userId", (q) => q.eq("userId", userId))
         .unique();
 
-        if(!user || !user.isPremium) return [];
+        if(!user) return [];
+
+        const limit = user.isPremium ? 20 : 3;
 
         const history = await ctx.db
         .query("cvHistory")
         .withIndex("by_userId", (q) => q.eq("userId", userId))
         .order("desc")
-        .take(20);
+        .take(limit);
 
         return history;
     }

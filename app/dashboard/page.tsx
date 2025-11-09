@@ -251,10 +251,10 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {isPremium && history && (
+        {history && history.length > 0 && (
           <div className="mt-12 bg-white border rounded-2xl shadow-md p-8">
             <h2 className="text-2xl font-bold mb-4 text-green-800">
-              Your Last {history.length} Generated CVs
+              {isPremium ? `Your last ${history.length} Generated CVs` : `You last generated CVs`}
             </h2>
             {history.length === 0 ? (
               <p className="text-gray-600">No history yet. Generate your first one!</p>
@@ -286,14 +286,14 @@ export default function DashboardPage() {
 
         {/* Premium CTA */}
         {!isPremium && (
-          <div className="mt-10 text-center bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white rounded-2xl py-8 shadow-md">
-            <h3 className="text-2xl font-bold mb-2">Unlock Unlimited Access 🚀</h3>
+          <div className="mt-10 text-center bg-gradient-to-r from-green-100 via-green-200 to-green-300 text-gray-800 rounded-2xl py-8 shadow-md">
+            <h3 className="text-2xl font-bold mb-2">Unlock Unlimited Access!!!</h3>
             <p className="text-sm mb-4 opacity-90">
               Upgrade to Premium for unlimited cover letters and faster processing.
             </p>
             <button
               onClick={handleUpgrade}
-              className="px-6 py-3 bg-white text-yellow-700 font-semibold rounded-lg hover:bg-yellow-100 transition"
+              className="px-6 py-3 bg-white text-gray-800 font-semibold rounded-lg hover:bg-green-50 transition"
             >
               Go Premium Now
             </button>
