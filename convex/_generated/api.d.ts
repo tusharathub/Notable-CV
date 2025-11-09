@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as cvHistory from "../cvHistory.js";
 import type * as usage from "../usage.js";
 import type * as users from "../users.js";
 
@@ -26,6 +27,7 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  cvHistory: typeof cvHistory;
   usage: typeof usage;
   users: typeof users;
 }>;
