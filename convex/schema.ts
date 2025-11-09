@@ -16,4 +16,11 @@ export default defineSchema({
         count: v.number(),
     }).index("by_user_and_date", ["userId", "date"])
     .index("by_user", ["userId"]),
+
+    cvHistory: defineTable({
+        userId : v.string(),
+        title: v.string(),
+        content: v.string(),
+        createdAt : v.number(),
+    }).index("by_userId", ["userId"]),
 })
