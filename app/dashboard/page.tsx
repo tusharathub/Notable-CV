@@ -28,6 +28,8 @@ export default function DashboardPage() {
     date: today,
   });
   const incrementUsage = useMutation(api.usage.incrementUsage);
+  const saveGeneratedCv = useMutation(api.cvHistory.saveCvHistory);
+  const history = useQuery(api.cvHistory.getCVHistory, userId ? {userId} : "skip");
 
   const canGenerate = isPremium
     ? true
@@ -73,6 +75,11 @@ export default function DashboardPage() {
 
       if (userId && !isPremium) {
         await incrementUsage({ userId, date: today });
+      }
+
+      if (userId && isPremium) {
+        const title = `Cover Letter - ${new Date().toLocaleDateString()}`;
+        await saveGeneratedCv({ userId, title, content: responseText });
       }
 
       const coverLetterMatch = responseText.match(
@@ -241,6 +248,39 @@ export default function DashboardPage() {
                 </ul>
               </div>
             </div>
+          </div>
+        )}
+
+        {isPremium && history && (
+          <div className="mt-12 bg-white border rounded-2xl shadow-md p-8">
+            <h2 className="text-2xl font-bold mb-4 text-green-800">
+              Your Last {history.length} Generated CVs
+            </h2>
+            {history.length === 0 ? (
+              <p className="text-gray-600">No history yet. Generate your first one!</p>
+            ) : (
+              <div className="space-y-4 max-h-[400px] overflow-y-auto">
+                {history.map((cv: any) => (
+                  <div
+                    key={cv._id}
+                    className="border-b pb-3 last:border-0 hover:bg-gray-50 rounded-lg p-3 transition"
+                  >
+                    <h3 className="font-semibold text-gray-800">{cv.title}</h3>
+                    <p className="text-sm text-gray-500">
+                      Generated on {new Date(cv.createdAt).toLocaleString()}
+                    </p>
+                    <details className="mt-2">
+                      <summary className="cursor-pointer text-green-700 hover:underline">
+                        View Cover Letter
+                      </summary>
+                      <pre className="whitespace-pre-wrap text-gray-700 bg-gray-50 rounded-lg p-3 mt-2">
+                        {cv.content}
+                      </pre>
+                    </details>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
