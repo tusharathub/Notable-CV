@@ -183,7 +183,7 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer className="py-10 text-center text-gray-500 text-sm border-t mt-10">
-        <p>© {new Date().getFullYear()} CoverCraft AI. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} NotableCV AI. All rights reserved.</p>
         <a
           href="https://x.com/tushar_nerd"
           target="_blank"

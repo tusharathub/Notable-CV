@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NotableCV - Land Your Dream Job with AI-Crafted Cover Letters  
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
+![Convex](https://img.shields.io/badge/Convex-Backend-blueviolet?style=for-the-badge)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4B5563?style=for-the-badge&logo=tailwind-css)
+![Stripe](https://img.shields.io/badge/Stripe-Payments-635BFF?style=for-the-badge&logo=stripe)
+![Clerk](https://img.shields.io/badge/Auth-Clerk-3B82F6?style=for-the-badge&logo=clerk)
 
-First, run the development server:
+> **NotableCV** is your personal job application assistant — It transforms your resume and job descriptions into perfectly tailored cover letters using AI.  
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+##  Live Demo  
+🔗 **[Visit CoverCraft AI ](https://notable-cv.vercel.app/)**  
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+##  What It Does
 
-## Learn More
+NotableCV helps job seekers create **personalized, professional, and ATS-friendly** cover letters in seconds.
 
-To learn more about Next.js, take a look at the following resources:
+## Features
+-  **AI-Powered Cover Letter Generator** – Just paste your resume & job description, and watch AI craft the perfect letter.   
+-  **Premium History** – Premium users can view their last 20 generated CVs instantly.  
+- **Smart Authentication** – Powered by **Clerk** for secure login & session management.  
+-  **Stripe Integration** – Seamless subscription system for premium upgrades.  
+-  **Real-Time Convex Backend** – All user data, plans, and history are synced live.    
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧩 Tech Stack
 
-## Deploy on Vercel
+| Layer | Technology |
+|-------|-------------|
+| Frontend | [Next.js 15 (App Router)](https://nextjs.org/docs/app) |
+| Backend | [Convex.dev](https://convex.dev/) |
+| Authentication | [Clerk.dev](https://clerk.com/) |
+| Payments | [Stripe](https://stripe.com/) |
+| Styling | [Tailwind CSS](https://tailwindcss.com/) |
+| Deployment | [Vercel](https://vercel.com/) |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**🔗 [Queries?](https://x.com/tushar_nerd)**
