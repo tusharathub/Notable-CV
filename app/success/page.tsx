@@ -1,12 +1,25 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import axios from "axios";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
-export default function SuccessPage() {
+export default function Page() {
+  return (
+    <Suspense
+    fallback={
+      <div className="p-10 text-center"> Verifying Payment..</div>
+    }
+    >
+      <SuccessPage/>
+    </Suspense>
+  )
+}
+
+
+function SuccessPage() {
   const params = useSearchParams();
   const sessionId = params.get("session_id");
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
