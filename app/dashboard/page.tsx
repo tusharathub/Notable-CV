@@ -29,13 +29,16 @@ export default function DashboardPage() {
   });
   const incrementUsage = useMutation(api.usage.incrementUsage);
   const saveGeneratedCv = useMutation(api.cvHistory.saveCvHistory);
-  const history = useQuery(api.cvHistory.getCVHistory, userId ? {userId} : "skip");
+  const history = useQuery(
+    api.cvHistory.getCVHistory,
+    userId ? { userId } : "skip",
+  );
 
   const canGenerate = isPremium
     ? true
     : usageCount === undefined
-    ? true
-    : usageCount < 3;
+      ? true
+      : usageCount < 3;
 
   const handleResumeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -83,13 +86,13 @@ export default function DashboardPage() {
       }
 
       const coverLetterMatch = responseText.match(
-        /\*\*Cover Letter:\*\*([\s\S]*?)\*\*Key Fit Points:\*\*/
+        /\*\*Cover Letter:\*\*([\s\S]*?)\*\*Key Fit Points:\*\*/,
       );
       const keyPointsMatch = responseText.match(
-        /\*\*Key Fit Points:\*\*([\s\S]*?)\*\*Resume Improvement Suggestions:\*\*/
+        /\*\*Key Fit Points:\*\*([\s\S]*?)\*\*Resume Improvement Suggestions:\*\*/,
       );
       const suggestionsMatch = responseText.match(
-        /\*\*Resume Improvement Suggestions:\*\*([\s\S]*)/
+        /\*\*Resume Improvement Suggestions:\*\*([\s\S]*)/,
       );
 
       const coverLetter =
@@ -143,7 +146,9 @@ export default function DashboardPage() {
           {isPremium && (
             <div className="flex items-center gap-2 bg-yellow-100 border border-yellow-300 px-4 py-2 rounded-full shadow-sm">
               <Crown className="text-yellow-600" />
-              <span className="font-medium text-yellow-800">Premium Member</span>
+              <span className="font-medium text-yellow-800">
+                Premium Member
+              </span>
             </div>
           )}
         </div>
@@ -158,11 +163,11 @@ export default function DashboardPage() {
               <label className="flex items-center justify-center gap-2 p-5 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 transition">
                 <Upload className="text-green-600" />
                 <span className="text-gray-600">
-                  {resume ? resume.name : "Click to upload (.pdf, .docx, or .txt)"}
+                  {resume ? resume.name : "Click to upload (.txt only)"}
                 </span>
                 <input
                   type="file"
-                  accept=".pdf,.docx,.txt"
+                  accept=".txt"
                   className="hidden"
                   onChange={handleResumeUpload}
                 />
@@ -190,8 +195,8 @@ export default function DashboardPage() {
               {loading
                 ? "Generating..."
                 : !isPremium && !canGenerate
-                ? "Daily limit reached"
-                : "Generate Custom Cover Letter"}
+                  ? "Daily limit reached"
+                  : "Generate Custom Cover Letter"}
             </button>
 
             {!isPremium && usageCount !== undefined && (
@@ -214,7 +219,9 @@ export default function DashboardPage() {
                 {result.coverLetter}
               </pre>
               <button
-                onClick={() => navigator.clipboard.writeText(result.coverLetter)}
+                onClick={() =>
+                  navigator.clipboard.writeText(result.coverLetter)
+                }
                 className="mt-4 px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition text-sm"
               >
                 Copy to Clipboard
@@ -241,7 +248,9 @@ export default function DashboardPage() {
                 </h3>
                 <ul className="list-disc list-inside text-gray-700 space-y-2">
                   {result.suggestions.length > 0 ? (
-                    result.suggestions.map((point, i) => <li key={i}>{point}</li>)
+                    result.suggestions.map((point, i) => (
+                      <li key={i}>{point}</li>
+                    ))
                   ) : (
                     <li>No suggestions found</li>
                   )}
@@ -254,10 +263,14 @@ export default function DashboardPage() {
         {history && history.length > 0 && (
           <div className="mt-12 bg-white border rounded-2xl shadow-md p-8">
             <h2 className="text-2xl font-bold mb-4 text-green-800">
-              {isPremium ? `Your last ${history.length} Generated CVs` : `You last generated CVs`}
+              {isPremium
+                ? `Your last ${history.length} Generated CVs`
+                : `You last generated CVs`}
             </h2>
             {history.length === 0 ? (
-              <p className="text-gray-600">No history yet. Generate your first one!</p>
+              <p className="text-gray-600">
+                No history yet. Generate your first one!
+              </p>
             ) : (
               <div className="space-y-4 max-h-[400px] overflow-y-auto">
                 {history.map((cv: any) => (
@@ -287,9 +300,12 @@ export default function DashboardPage() {
         {/* Premium CTA */}
         {!isPremium && (
           <div className="mt-10 text-center bg-gradient-to-r from-green-50 via-green-100 to-green-200 text-gray-800 rounded-2xl py-8 shadow-md">
-            <h3 className="text-2xl font-bold mb-2">Unlock Unlimited Access!!!</h3>
+            <h3 className="text-2xl font-bold mb-2">
+              Unlock Unlimited Access!!!
+            </h3>
             <p className="text-sm mb-4 opacity-90">
-              Upgrade to Premium for unlimited cover letters and faster processing.
+              Upgrade to Premium for unlimited cover letters and faster
+              processing.
             </p>
             <button
               onClick={handleUpgrade}

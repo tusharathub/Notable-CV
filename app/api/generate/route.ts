@@ -1,16 +1,48 @@
+import { auth } from "@clerk/nextjs/server";
+import { ConvexHttpClient } from "convex/browser";
+import { api } from "@/convex/_generated/api";
 import Groq from "groq-sdk";
 import { NextResponse } from "next/server";
+import { format } from "date-fns";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function POST(req: Request) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { jobDescription, resume } = await req.json();
     if (!jobDescription || !resume) {
       return NextResponse.json(
         { error: "Job description and resume are required" },
-        { status: 400 }
+        { status: 400 },
       );
+    }
+
+    // Check premium status and usage
+    const user = await convex.query(api.users.getUserById, { userId });
+    const isPremium = user?.isPremium || false;
+
+    if (!isPremium) {
+      const today = format(new Date(), "yyyy-MM-dd");
+      const usageCount = await convex.query(api.usage.getUsage, {
+        userId,
+        date: today,
+      });
+
+      if (usageCount >= 3) {
+        return NextResponse.json(
+          {
+            error:
+              "Daily limit reached. Upgrade to Premium for unlimited access.",
+          },
+          { status: 403 },
+        );
+      }
     }
 
     const prompt = `
@@ -45,27 +77,29 @@ export async function POST(req: Request) {
     `;
 
     const completion = await groq.chat.completions.create({
-        model: "llama-3.1-8b-instant",
-        messages: [
-            {
-                role: "system",
-                content: "You are a helpful AI assistant specializing in career optimization "
-            },
-            {
-                role: "user",
-                content: prompt,
-            }
-        ]
+      model: "llama-3.1-8b-instant",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a helpful AI assistant specializing in career optimization ",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
     });
 
-    const aiResponse = completion.choices[0]?.message?.content || "No response from AI";
+    const aiResponse =
+      completion.choices[0]?.message?.content || "No response from AI";
 
-    return NextResponse.json({result : aiResponse});
+    return NextResponse.json({ result: aiResponse });
   } catch (error) {
-    console.log("error in generating response", error);
+    console.error("error in generating response", error);
     return NextResponse.json(
-        {error: "Failed to generate Cover Letter"},
-        {status: 400},
-    )
+      { error: "Failed to generate Cover Letter" },
+      { status: 500 },
+    );
   }
 }
