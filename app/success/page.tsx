@@ -2,27 +2,25 @@
 
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import axios from "axios";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 export default function Page() {
   return (
     <Suspense
-    fallback={
-      <div className="p-10 text-center"> Verifying Payment..</div>
-    }
+      fallback={<div className="p-10 text-center"> Verifying Payment..</div>}
     >
-      <SuccessPage/>
+      <SuccessPage />
     </Suspense>
-  )
+  );
 }
-
 
 function SuccessPage() {
   const params = useSearchParams();
   const sessionId = params.get("session_id");
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    "loading",
+  );
 
   const updatePremium = useMutation(api.users.updatePremiumStatus);
 
@@ -31,7 +29,14 @@ function SuccessPage() {
       if (!sessionId) return;
 
       try {
-        const { data } = await axios.post("/api/verify-session", { sessionId });
+        const response = await fetch("/api/verify-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ sessionId }),
+        });
+        const data = await response.json();
 
         if (data?.userId) {
           await updatePremium({ userId: data.userId, isPremium: true });
@@ -48,7 +53,8 @@ function SuccessPage() {
     verifyPayment();
   }, [sessionId, updatePremium]);
 
-  if (status === "loading") return <div className="p-10 text-center">Verifying payment...</div>;
+  if (status === "loading")
+    return <div className="p-10 text-center">Verifying payment...</div>;
 
   if (status === "error")
     return (
@@ -59,8 +65,12 @@ function SuccessPage() {
 
   return (
     <div className="p-10 text-center">
-      <h1 className="text-3xl font-bold text-green-600 mb-4">Payment Successful 🎉</h1>
-      <p className="text-gray-700">Your Premium plan is now active. Enjoy unlimited CV generations!</p>
+      <h1 className="text-3xl font-bold text-green-600 mb-4">
+        Payment Successful 🎉
+      </h1>
+      <p className="text-gray-700">
+        Your Premium plan is now active. Enjoy unlimited CV generations!
+      </p>
       <a
         href="/dashboard"
         className="inline-block mt-6 px-6 py-3 bg-green-700 text-white rounded-lg hover:bg-green-600 transition"

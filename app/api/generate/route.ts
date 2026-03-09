@@ -67,7 +67,7 @@ export async function POST(req: Request) {
     `;
 
     const completion = await groq.chat.completions.create({
-      model: "llama-3.1-8b-instant",
+      model: "llama-3.3-70b-versatile",
       response_format: { type: "json_object" },
       messages: [
         {
@@ -87,8 +87,12 @@ export async function POST(req: Request) {
     if (!aiResponse) throw new Error("No response from AI");
 
     return NextResponse.json({ result: JSON.parse(aiResponse) });
-  } catch (error) {
-    console.error("error in generating response", error);
+  } catch (error: unknown) {
+    if (error instanceof Groq.APIError) {
+      console.error("Groq API Error:", error.status, error.error);
+    } else {
+      console.error("error in generating response", error);
+    }
     return NextResponse.json(
       { error: "Failed to generate Cover Letter" },
       { status: 500 },
