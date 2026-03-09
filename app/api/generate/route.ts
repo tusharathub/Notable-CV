@@ -54,20 +54,10 @@ export async function POST(req: Request) {
         2. Give 3-5 strong bullet points summarizing why the user fits the role. 
         3. Suggest 3-5 bullet points that can be added to the resume to make it more compatible with the job.
 
-        Return your answer in this format:
-
-        ---
-        **Cover Letter:**
-        [Write here]
-
-        **Key Fit Points:**
-        - point 1
-        - point 2
-
-        **Resume Improvement Suggestions:**
-        - suggestion 1
-        - suggestion 2
-        ---
+        Return your answer ONLY as a valid JSON object with EXACTLY these three keys:
+        - "coverLetter": A string containing the cover letter.
+        - "keyPoints": An array of strings containing the key fit points.
+        - "suggestions": An array of strings containing the resume improvement suggestions.
 
         Job Description:
         ${jobDescription}
@@ -78,11 +68,12 @@ export async function POST(req: Request) {
 
     const completion = await groq.chat.completions.create({
       model: "llama-3.1-8b-instant",
+      response_format: { type: "json_object" },
       messages: [
         {
           role: "system",
           content:
-            "You are a helpful AI assistant specializing in career optimization ",
+            "You are a helpful AI assistant specializing in career optimization. You MUST return ONLY valid JSON.",
         },
         {
           role: "user",
@@ -91,10 +82,11 @@ export async function POST(req: Request) {
       ],
     });
 
-    const aiResponse =
-      completion.choices[0]?.message?.content || "No response from AI";
+    const aiResponse = completion.choices[0]?.message?.content;
 
-    return NextResponse.json({ result: aiResponse });
+    if (!aiResponse) throw new Error("No response from AI");
+
+    return NextResponse.json({ result: JSON.parse(aiResponse) });
   } catch (error) {
     console.error("error in generating response", error);
     return NextResponse.json(

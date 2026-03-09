@@ -6,6 +6,7 @@ import { useAuth } from "@clerk/nextjs";
 import { format } from "date-fns";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { toast } from "sonner";
 
 import GeneratorForm from "@/components/dashboard/GeneratorForm";
 import GeneratedResults from "@/components/dashboard/GeneratedResults";
@@ -61,7 +62,7 @@ export default function DashboardPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Something went wrong");
 
-      const responseText = data.result as string;
+      const parsedResult = data.result;
 
       if (userId && !isPremium) {
         await incrementUsage({ userId, date: today });
@@ -69,38 +70,21 @@ export default function DashboardPage() {
 
       if (userId && isPremium) {
         const title = `Cover Letter - ${new Date().toLocaleDateString()}`;
-        await saveGeneratedCv({ userId, title, content: responseText });
+        await saveGeneratedCv({
+          userId,
+          title,
+          content: parsedResult.coverLetter,
+        });
       }
 
-      const coverLetterMatch = responseText.match(
-        /\*\*Cover Letter:\*\*([\s\S]*?)\*\*Key Fit Points:\*\*/,
-      );
-      const keyPointsMatch = responseText.match(
-        /\*\*Key Fit Points:\*\*([\s\S]*?)\*\*Resume Improvement Suggestions:\*\*/,
-      );
-      const suggestionsMatch = responseText.match(
-        /\*\*Resume Improvement Suggestions:\*\*([\s\S]*)/,
-      );
-
-      const coverLetter =
-        coverLetterMatch?.[1]?.trim() || "No cover letter found.";
-      const keyPoints = keyPointsMatch
-        ? keyPointsMatch[1]
-            .trim()
-            .split("\n")
-            .filter((line) => line.trim().startsWith("-"))
-        : [];
-      const suggestions = suggestionsMatch
-        ? suggestionsMatch[1]
-            .trim()
-            .split("\n")
-            .filter((line) => line.trim().startsWith("-"))
-        : [];
-
-      setResult({ coverLetter, keyPoints, suggestions });
+      setResult({
+        coverLetter: parsedResult?.coverLetter || "No cover letter found.",
+        keyPoints: parsedResult?.keyPoints || [],
+        suggestions: parsedResult?.suggestions || [],
+      });
     } catch (error: any) {
       console.error("Error generating CV:", error);
-      alert(error.message || "Failed to generate cover letter");
+      toast.error(error.message || "Failed to generate cover letter");
     } finally {
       setLoading(false);
     }
@@ -117,7 +101,7 @@ export default function DashboardPage() {
     if (data.url) {
       window.location.href = data.url;
     } else {
-      alert("Failed to redirect to checkout.");
+      toast.error("Failed to redirect to checkout.");
     }
   };
 

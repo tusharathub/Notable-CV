@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Upload } from "lucide-react";
+import { toast } from "sonner";
 
 interface GeneratorFormProps {
   onGenerate: (resume: File, jobDesc: string) => void;
@@ -26,12 +27,14 @@ export default function GeneratorForm({
 
   const handleGenerate = () => {
     if (!resume || !jobDesc.trim()) {
-      alert("Please upload your resume and paste the job description.");
+      toast.error("Please upload your resume and paste the job description.");
       return;
     }
 
     if (!isPremium && !canGenerate) {
-      alert("You’ve reached your free limit for today. Upgrade to Premium!");
+      toast.error(
+        "You've reached your free limit for today. Upgrade to Premium!",
+      );
       return;
     }
 

@@ -4,6 +4,7 @@ import "./globals.css";
 import ConvexClientProvider from "./ConvexClerkProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import SyncClerkToConvex from "./syncUser";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,17 +27,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <ClerkProvider>
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <ClerkProvider>
           <ConvexClientProvider>
-          {children}
+            {children}
             <SyncClerkToConvex />
+            <Toaster position="top-center" richColors />
           </ConvexClientProvider>
-          </ClerkProvider>
-        </body>
-      </html>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
